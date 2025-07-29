@@ -11,22 +11,29 @@ import random
 def human_delay(min_ms=100, max_ms=300):
     time.sleep(random.uniform(min_ms / 1000.0, max_ms / 1000.0))
 
-# Load environment variables
 load_dotenv()
 EMAIL = os.getenv("FB_EMAIL")
 PASSWORD = os.getenv("FB_PASSWORD")
 
-# Set up Selenium WebDriver
 options = Options()
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_experimental_option('useAutomationExtension', False)
+options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36")
 service = Service()  # Assumes chromedriver is in PATH
 
 driver = webdriver.Chrome(service=service, options=options)
-driver.get("https://www.facebook.com")
 driver.execute_script("""
 Object.defineProperty(navigator, 'webdriver', {
-  get: () => false,
+  get: () => undefined,
 });
 """)
+driver.execute_script("""
+Object.defineProperty(navigator, 'platform', { get: () => 'MacIntel' });
+Object.defineProperty(navigator, 'language', { get: () => 'en-US' });
+""")
+
+time.sleep(3)
+driver.get("https://www.facebook.com")
 
 # Simulate typing
 email_box = driver.find_element(By.ID, "email")

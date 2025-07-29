@@ -15,13 +15,8 @@ load_dotenv()
 EMAIL = os.getenv("FB_EMAIL")
 PASSWORD = os.getenv("FB_PASSWORD")
 
-options = Options()
-options.add_experimental_option("excludeSwitches", ["enable-automation"])
-options.add_experimental_option('useAutomationExtension', False)
-options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36")
-service = Service('./chromedriver')  # Assumes chromedriver is in PATH
-
-driver = webdriver.Chrome(service=service, options=options)
+service = Service('./geckodriver')
+driver = webdriver.Firefox(service=service)
 driver.execute_script("""
 Object.defineProperty(navigator, 'webdriver', {
   get: () => undefined,
